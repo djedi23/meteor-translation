@@ -10,7 +10,7 @@ Translation = function(){
 
     Translations = new Meteor.Collection(this.mongoCollection);
 
-    this.lang_EN = ['en', 'en_EN'];
+    this.lang_EN = ['en', 'en_US'];
     this.lang_FR = ['fr', 'fr_FR'];
     this.lang_DE = ['de', 'de_DE'];
 
