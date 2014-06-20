@@ -30,6 +30,28 @@ Translation = function(){
 	    if (!Translations.findOne({key:key, domain:domain, lang:lang}))
 		Translations.insert({key:key, domain:domain, lang:lang, value:value});    
     };
+
+    this._ = function(key, domain) {
+	var lang = Session.get(Translation.session);
+	var query = {key:key, lang: {$all: [lang]}};
+	if (_.isString(domain))
+	    query.domain = domain;
+
+	var message = Translations.findOne(query);
+	if (message)
+            return message.value;
+
+	query = {key:key, lang: {$all: Translation.lang_fallback}};
+	if (_.isString(domain))
+	    query.domain = domain;
+	message = Translations.findOne(query);
+	if (message)
+            return message.value;
+
+	warn("no translation", key, _.isString(domain)?domain:'', lang);
+	return '__'+key+'__';
+    }
+
 };
 
 Translation = new Translation();
