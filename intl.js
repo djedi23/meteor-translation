@@ -1,6 +1,6 @@
 Translation = function(){
     var set_default = function(setting, default_value){
-	return  (typeof Meteor.settings.public != 'undefined' && typeof Meteor.settings.public.translation != 'undefined' && Meteor.settings.public.translation[setting]) ? Meteor.settings.public.translation[setting] : default_value;
+	return  (typeof Meteor.settings != 'undefined' && typeof Meteor.settings.public != 'undefined' && typeof Meteor.settings.public.translation != 'undefined' && Meteor.settings.public.translation[setting]) ? Meteor.settings.public.translation[setting] : default_value;
     }
 
     this.publish = set_default('publish','intl');
@@ -9,6 +9,7 @@ Translation = function(){
     this.mongoCollection = set_default('mongoCollection','intl');
 
     Translations = new Meteor.Collection(this.mongoCollection);
+    this.collection = Translations;
 
     this.lang_EN = ['en', 'en_US'];
     this.lang_FR = ['fr', 'fr_FR'];
