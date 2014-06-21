@@ -15,3 +15,12 @@ Package.on_use(function (api) {
   api.export('Translation', ['client', 'server']);
 
 });
+
+
+Package.on_test(function (api) {
+  api.use('translation', ['client', 'server']);
+  api.use('tinytest', ['client', 'server']);
+  api.use('test-helpers', ['client', 'server']);
+
+  api.add_files('test/test.js', ['client', 'server']);
+});
