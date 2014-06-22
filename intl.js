@@ -1,7 +1,7 @@
 Translation = function(){
     var set_default = function(setting, default_value){
 	return  (typeof Meteor.settings != 'undefined' && typeof Meteor.settings.public != 'undefined' && typeof Meteor.settings.public.translation != 'undefined' && Meteor.settings.public.translation[setting]) ? Meteor.settings.public.translation[setting] : default_value;
-    }
+    };
 
     this.publish = set_default('publish','intl');
     this.uiHelper = set_default('uiHelper','_');
@@ -11,9 +11,9 @@ Translation = function(){
     Translations = new Meteor.Collection(this.mongoCollection);
     this.collection = Translations;
 
-    this.lang_EN = ['en', 'en_US'];
-    this.lang_FR = ['fr', 'fr_FR'];
-    this.lang_DE = ['de', 'de_DE'];
+    this.lang_EN = ['en', 'en-US'];
+    this.lang_FR = ['fr', 'fr-FR'];
+    this.lang_DE = ['de', 'de-DE'];
 
     this.lang_fallback=this.lang_EN;
 };
@@ -51,7 +51,7 @@ _.extend(Translation.prototype, {
 	if (message)
             return message.value;
 
-	warn("no translation", key, _.isString(domain)?domain:'', lang);
+	console.warn("no translation", key, _.isString(domain)?domain:'', lang);
 	return '__'+key+'__';
     }
 
