@@ -34,7 +34,7 @@ _.extend(Translation.prototype, {
 		Translations.insert({key:key, domain:domain, lang:lang, value:value});
     },
 
-    _: function(key, domain) {
+    __: function(key, domain) {
 	var lang = Session.get(Translation.session);
 	var query = {key:key, lang: {$all: [lang]}};
 	if (_.isString(domain))
@@ -53,8 +53,20 @@ _.extend(Translation.prototype, {
 
 	console.warn("no translation", key, _.isString(domain)?domain:'', lang);
 	return '__'+key+'__';
-    }
+    },
 
+    _: function(key, domain, variables) {
+        var trans = Translation.__(key,domain);
+        if (variables != undefined && !_.isEmpty(variables.hash)){
+            _.each(_.pairs(variables.hash),
+                   function(e){
+                       var re = RegExp('{'+e[0]+'}');
+                       trans = trans.replace(re,e[1]);
+                   });
+        }
+
+        return trans;
+    }
 });
 
 Translation = new Translation();
