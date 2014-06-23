@@ -8,8 +8,7 @@ Translation = function(){
     this.session = set_default('session','lang');
     this.mongoCollection = set_default('mongoCollection','intl');
 
-    Translations = new Meteor.Collection(this.mongoCollection);
-    this.collection = Translations;
+    this.collection = new Meteor.Collection(this.mongoCollection);
 
     this.lang_EN = ['en', 'en-US'];
     this.lang_FR = ['fr', 'fr-FR'];
@@ -30,8 +29,8 @@ _.extend(Translation.prototype, {
 
     add_translation: function(domain, key, lang, value) {
 	if (Meteor.isServer)
-	    if (!Translations.findOne({key:key, domain:domain, lang:lang}))
-		Translations.insert({key:key, domain:domain, lang:lang, value:value});
+	    if (!Translation.collection.findOne({key:key, domain:domain, lang:lang}))
+		Translation.collection.insert({key:key, domain:domain, lang:lang, value:value});
     },
 
     __: function(key, domain) {
@@ -40,14 +39,14 @@ _.extend(Translation.prototype, {
 	if (_.isString(domain))
 	    query.domain = domain;
 
-	var message = Translations.findOne(query);
+	var message = Translation.collection.findOne(query);
 	if (message)
             return message.value;
 
 	query = {key:key, lang: {$all: Translation.lang_fallback}};
 	if (_.isString(domain))
 	    query.domain = domain;
-	message = Translations.findOne(query);
+	message = Translation.collection.findOne(query);
 	if (message)
             return message.value;
 

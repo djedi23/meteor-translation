@@ -3,6 +3,7 @@ var domain = "_tinytest";
 
 var setup = function(){
     Translation.add_translation([domain], "key1", Translation.lang_EN, "key 1 en");
+    Translation.add_translation([domain], "key1", Translation.lang_FR, "key 1 en");
 };
 
 var tearDown = function(){
@@ -29,6 +30,7 @@ Tinytest.add('Translation - current lang', function (test) {
 Tinytest.add('Translation - lookup simple', function (test) {
     setup();
 
+    if (typeof Session != 'undefined') Session.set(Translation.session, Translation.lang_fallback);
     var translation = Translation.__('key1', domain);
     test.equal(translation, 'key 1 en', "basic lookup");
 
