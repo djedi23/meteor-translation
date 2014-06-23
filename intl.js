@@ -35,7 +35,7 @@ _.extend(Translation.prototype, {
     },
 
     __: function(key, domain) {
-	var lang = Session.get(Translation.session);
+	var lang = this.current_lang();
 	var query = {key:key, lang: {$all: [lang]}};
 	if (_.isString(domain))
 	    query.domain = domain;
@@ -51,7 +51,7 @@ _.extend(Translation.prototype, {
 	if (message)
             return message.value;
 
-	console.warn("no translation", key, _.isString(domain)?domain:'', lang);
+	console.warn("no translation for key [", key, "], domain [", _.isString(domain)?domain:'',"], lang [", lang, "].");
 	return '__'+key+'__';
     },
 
