@@ -7,6 +7,7 @@ Translation = function(){
     this.uiHelper = set_default('uiHelper','_');
     this.session = set_default('session','lang');
     this.mongoCollection = set_default('mongoCollection','intl');
+    this.debug = set_default('debug',true);
 
     this.collection = new Meteor.Collection(this.mongoCollection);
 
@@ -50,7 +51,7 @@ _.extend(Translation.prototype, {
 	if (message)
             return message.value;
 
-	console.warn("no translation for key [", key, "], domain [", _.isString(domain)?domain:'',"], lang [", lang, "].");
+	Translation.debug && console.warn("no translation for key [", key, "], domain [", _.isString(domain)?domain:'',"], lang [", lang, "].");
 	return '__'+key+'__';
     },
 
