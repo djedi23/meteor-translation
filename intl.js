@@ -15,28 +15,34 @@ Translation = function(){
     this.lang_FR = ['fr', 'fr-FR'];
     this.lang_DE = ['de', 'de-DE'];
 
-    this.lang_fallback=this.lang_EN;
+    this.lang_fallback=this.lang_EN[0];
 };
 
 _.extend(Translation.prototype, {
-    current_lang: function() {
-	if (typeof Session != 'undefined') {
-	    var lang = Session.get(this.session);
-	    if (lang)
-		return lang;
+    currentLang: function(/* arguments */) {
+	if (arguments.length == 1) {
+	    Session.set(this.session, arguments[0]);
 	}
-	return this.lang_fallback;
+	else 
+	{
+	    if (typeof Session != 'undefined') {
+		var lang = Session.get(this.session);
+		if (lang)
+		    return lang;
+	    }
+	    return this.lang_fallback;
+	}
     },
 
-    add_translation: function(domain, key, lang, value) {
+    addTranslation: function(domain, key, lang, value) {
 	if (Meteor.isServer)
 	    if (!Translation.collection.findOne({key:key, domain:domain, lang:lang}))
 		Translation.collection.insert({key:key, domain:domain, lang:lang, value:value});
     },
 
     __: function(key, domain) {
-	var lang = this.current_lang();
-	var query = {key:key, lang: {$all: [lang]}};
+	var lang = this.currentLang();
+	var query = {key:key, lang: lang};
 	if (_.isString(domain))
 	    query.domain = domain;
 
@@ -44,7 +50,7 @@ _.extend(Translation.prototype, {
 	if (message)
             return message.value;
 
-	query = {key:key, lang: {$all: Translation.lang_fallback}};
+	query = {key:key, lang: Translation.lang_fallback};
 	if (_.isString(domain))
 	    query.domain = domain;
 	message = Translation.collection.findOne(query);
@@ -57,13 +63,19 @@ _.extend(Translation.prototype, {
 
     _: function(key, domain, variables) {
         var trans = Translation.__(key,domain);
-        if (variables != undefined && !_.isEmpty(variables.hash)){
-            _.each(_.pairs(variables.hash),
-                   function(e){
-                       var re = RegExp('{'+e[0]+'}');
-                       trans = trans.replace(re,e[1]);
-                   });
-        }
+	var params=[];
+        if (variables != undefined)
+	    if (!_.isEmpty(variables.hash)){
+		params = variables.hash;
+	    } else if (_.isObject(variables)){
+		params = variables;
+	    }
+
+        _.each(_.pairs(params),
+               function(e){
+                   var re = RegExp('{'+e[0]+'}');
+                   trans = trans.replace(re,e[1]);
+               });
 
         return trans;
     }
