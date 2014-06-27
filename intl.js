@@ -1,25 +1,26 @@
 Translation = function(){
+    var self = this;
     var set_default = function(setting, default_value){
 	return  (typeof Meteor.settings != 'undefined' && typeof Meteor.settings.public != 'undefined' && typeof Meteor.settings.public.translation != 'undefined' && Meteor.settings.public.translation[setting]) ? Meteor.settings.public.translation[setting] : default_value;
     };
 
-    this.publish = set_default('publish','intl');
-    this.uiHelper = set_default('uiHelper','_');
-    this.session = set_default('session','lang');
-    this.mongoCollection = set_default('mongoCollection','intl');
-    this.debug = set_default('debug',true);
+    self.publish = set_default('publish','intl');
+    self.uiHelper = set_default('uiHelper','_');
+    self.session = set_default('session','lang');
+    self.mongoCollection = set_default('mongoCollection','intl');
+    self.debug = set_default('debug',true);
 
-    this.collection = new Meteor.Collection(this.mongoCollection);
+    self.collection = new Meteor.Collection(self.mongoCollection);
 
-    this.lang_EN = ['en', 'en-US'];
-    this.lang_FR = ['fr', 'fr-FR'];
-    this.lang_DE = ['de', 'de-DE'];
+    self.lang_EN = ['en', 'en-US'];
+    self.lang_FR = ['fr', 'fr-FR'];
+    self.lang_DE = ['de', 'de-DE'];
 
-    this.lang_fallback=this.lang_EN[0];
+    self.lang_fallback=self.lang_EN[0];
 
 
-    this.collection.allow =
-	_.wrap(this.collection.allow, 
+    self.collection.allow =
+	_.wrap(self.collection.allow, 
 	       function(allow, options){
 		   var self = this;
 		   if (_.has(options, "publish")){
@@ -30,7 +31,7 @@ Translation = function(){
 	       });
 
 
-    this.collection.canPublish = function(userId, domains, lang, key){
+    self.collection.canPublish = function(userId, domains, lang, key){
     	if (Translation.collection._validators.publish)
 	    return ! (_.all(Translation.collection._validators.publish.allow, function(validator) {
 		return ! validator(userId, domains, lang, key);
@@ -42,17 +43,18 @@ Translation = function(){
 
 _.extend(Translation.prototype, {
     currentLang: function(/* arguments */) {
+	var self = this;
 	if (arguments.length == 1) {
-	    Session.set(this.session, arguments[0]);
+	    Session.set(self.session, arguments[0]);
 	}
 	else 
 	{
 	    if (typeof Session != 'undefined') {
-		var lang = Session.get(this.session);
+		var lang = Session.get(self.session);
 		if (lang)
 		    return lang;
 	    }
-	    return this.lang_fallback;
+	    return self.lang_fallback;
 	}
     },
 
@@ -63,7 +65,8 @@ _.extend(Translation.prototype, {
     },
 
     __: function(key, domain) {
-	var lang = this.currentLang();
+	var self = this;
+	var lang = self.currentLang();
 	var query = {key:key, lang: lang};
 	if (_.isString(domain))
 	    query.domain = domain;
