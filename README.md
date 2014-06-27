@@ -123,7 +123,14 @@ Translation.collection.allow({
     }
 });
 ```
+If you define your own publish methods, you can use the following function to check if the publication is allowed:
+`Translation.collection.canPublish(this.userId, domains, lang, key)`
 
+Then in your publish method, apply this pattern:
+```JavaScript
+	return Translation.collection.canPublish(this.userId, domains, lang, key) && 
+		Translation.collection.find({ ... }) || [];
+```
 
 
 # Configuration

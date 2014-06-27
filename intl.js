@@ -16,6 +16,28 @@ Translation = function(){
     this.lang_DE = ['de', 'de-DE'];
 
     this.lang_fallback=this.lang_EN[0];
+
+
+    this.collection.allow =
+	_.wrap(this.collection.allow, 
+	       function(allow, options){
+		   var self = this;
+		   if (_.has(options, "publish")){
+		       self._validators.publish = {allow: [options.publish]};
+		       delete options.publish;
+		   }
+		   return allow.call(self,options);
+	       });
+
+
+    this.collection.canPublish = function(userId, domains, lang, key){
+    	if (Translation.collection._validators.publish)
+	    return ! (_.all(Translation.collection._validators.publish.allow, function(validator) {
+		return ! validator(userId, domains, lang, key);
+	    }));
+	else
+	    return true;
+    };
 };
 
 _.extend(Translation.prototype, {
@@ -82,3 +104,5 @@ _.extend(Translation.prototype, {
 });
 
 Translation = new Translation();
+
+

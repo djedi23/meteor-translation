@@ -5,7 +5,9 @@ Meteor.startup(function () {
 		   function (domains, lang) {
 		       if (domains == undefined || lang == undefined)
 			   return [];
-		       return Translation.collection.find({domain: {$in: domains},
-						 lang: {$in: [lang]}});
+
+		       return Translation.collection.canPublish(this.userId, domains, lang) && 
+			   Translation.collection.find({domain: {$in: domains},
+							lang: {$in: [lang]}}) || [];
 		   });
 });
