@@ -91,6 +91,31 @@ Meteor.isServer && Meteor.startup(function () {
 });
 ```
 
+You can inject initial translation from a JSON file:
+```JavaScript
+	Translation.addTranslationFromJSON(Assets.getText('translations.json'));
+```
+
+The JSON file have the following structure:
+```JSON
+[
+    {
+	"domains": ["domain1", "domain2"],
+	"entries": [
+	    { "langs" : ["en", "en_US"],
+	      "translations": [
+		  {"key": "key1",
+		   "translation": "translation 1"},
+		  {"key": "key2",
+		   "translation": "translation 2"}
+	      ]
+	    }
+	]
+    }
+]
+
+```
+
 # Modify the translation
 
 Translation doesn't offer API to modify your translation entries. But you have a direct acces to the collection with the variable `Translation.collection`.

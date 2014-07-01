@@ -57,13 +57,6 @@ _.extend(Translation.prototype, {
 	    return self.lang_fallback;
 	}
     },
-
-    addTranslation: function(domain, key, lang, value) {
-	if (Meteor.isServer)
-	    if (!Translation.collection.findOne({key:key, domain:domain, lang:lang}))
-		Translation.collection.insert({key:key, domain:domain, lang:lang, value:value});
-    },
-
     __: function(key, domain) {
 	var self = this;
 	var lang = self.currentLang();
@@ -105,6 +98,27 @@ _.extend(Translation.prototype, {
         return trans;
     }
 });
+
+if (Meteor.isServer){
+    _.extend(Translation.prototype, {
+	addTranslation: function(domain, key, lang, value) {
+	    if (!Translation.collection.findOne({key:key, domain:domain, lang:lang}))
+		Translation.collection.insert({key:key, domain:domain, lang:lang, value:value});
+	},
+	addTranslationFromJSON: function(str) {
+	    var obj = JSON.parse(str);
+	    _.each(obj,function(domain){
+		var domains = domain.domains;
+		_.each(domain.entries, function(entry){
+		    var langs = entry.langs;
+		    _.each(entry.translations, function(t){
+			Translation.addTranslation(domains, t.key, langs, t.translation);
+		    });
+		});
+	    });
+	}
+    });
+}
 
 Translation = new Translation();
 
