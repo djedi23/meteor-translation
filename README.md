@@ -168,7 +168,8 @@ The available configuration are:
 - `Meteor.settings.public.translation.uiHelper`: the name of the helper used in template. If you prefer `{{i18n ...}}`, set the configuration to _i18n_.
 - `Meteor.settings.public.translation.session`: the name of the session that keep track of the current language.
 - `Meteor.settings.public.translation.mongoCollection`: the name of the colletion used by translation.
-- `Meteor.settings.public.translation.debug`: if true, displays a warning when translation entries aren't found.
+- `Meteor.settings.public.translation.debug`: if true, displays a warning when translation entries aren't found and displays the key.
+- `Meteor.settings.public.translation.keyFallBack`: if true, displays the key when an entry is not found.
 
 
 The default configuration is:

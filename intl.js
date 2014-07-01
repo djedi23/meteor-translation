@@ -1,7 +1,7 @@
 Translation = function(){
     var self = this;
     var set_default = function(setting, default_value){
-	return  (typeof Meteor.settings != 'undefined' && typeof Meteor.settings.public != 'undefined' && typeof Meteor.settings.public.translation != 'undefined' && Meteor.settings.public.translation[setting]) ? Meteor.settings.public.translation[setting] : default_value;
+	return  (typeof Meteor.settings != 'undefined' && typeof Meteor.settings.public != 'undefined' && typeof Meteor.settings.public.translation != 'undefined' && Meteor.settings.public.translation[setting] != undefined) ? Meteor.settings.public.translation[setting] : default_value;
     };
 
     self.publish = set_default('publish','intl');
@@ -9,6 +9,7 @@ Translation = function(){
     self.session = set_default('session','lang');
     self.mongoCollection = set_default('mongoCollection','intl');
     self.debug = set_default('debug',true);
+    self.keyFallBack = set_default('keyFallBack',false);
 
     self.collection = new Meteor.Collection(self.mongoCollection);
 
@@ -75,8 +76,14 @@ _.extend(Translation.prototype, {
 	if (message)
             return message.value;
 
-	Translation.debug && console.warn("no translation for key [", key, "], domain [", _.isString(domain)?domain:'',"], lang [", lang, "].");
-	return '__'+key+'__';
+	if (Translation.keyFallBack)
+	    return key;
+	else if (Translation.debug){
+	    console.warn("no translation for key [", key, "], domain [", _.isString(domain)?domain:'',"], lang [", lang, "].");
+	    return '__'+key+'__';
+	}
+	else
+	    return '';
     },
 
     _: function(key, domain, variables) {
@@ -121,5 +128,3 @@ if (Meteor.isServer){
 }
 
 Translation = new Translation();
-
-
