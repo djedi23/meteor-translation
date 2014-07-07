@@ -113,7 +113,6 @@ The JSON file have the following structure:
 	]
     }
 ]
-
 ```
 
 # Modify the translation

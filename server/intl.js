@@ -1,6 +1,10 @@
 
 
 Meteor.startup(function () {
+    /*
+     * The main translation publish.
+     * Publish all translation in the givan domains / languages.
+     */
     Meteor.publish(Translation.publish,
 		   function (domains, lang) {
 		       var self = this;
