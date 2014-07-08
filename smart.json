@@ -1,9 +1,9 @@
 {
   "name": "translation",
   "description": "Translation in the reactive way",
-  "homepage": "",
-  "author": "moise.valvassori@gmail.com",
+  "homepage": "https://github.com/djedi23/meteor-translation",
+  "author": "Moise Valvassori <moise.valvassori@gmail.com>",
   "version": "0.1.0",
-  "git": "",
+  "git": "https://github.com/djedi23/meteor-translation.git",
   "packages": {}
 }
