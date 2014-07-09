@@ -8,6 +8,7 @@ Translation entries are indentified by _domains_, _keys_ and _languages_
 - _key_ the id the entry in the domain.
 - _languages_ is an array of languages the entry should match. An entry could match many languages (an entry can match _en-US_ and _en-GB_)
 
+Try the demo here: http://translation.meteor.com/
 
 # Instalation
 
